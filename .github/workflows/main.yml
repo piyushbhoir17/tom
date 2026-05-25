@@ -22,6 +22,7 @@ jobs:
           repository: Tiktodz/android_kernel_asus_sdm636
           ref: tom/hmp
           path: kernel_source
+          submodules: 'recursive'
 
       - name: Set up Environment
         run: |
@@ -45,7 +46,10 @@ jobs:
           export SUBARCH=arm64
           export CC="ccache clang"
           
-          # Generate config (bypassing make clean)
+          # Fix buggy kernel/Makefile that causes "recipe commences before first target"
+          perl -pi -e 's/^\t\$\(call if_changed,gzip\)/\$\(obj\)\/config_data.gz: \$\(KCONFIG_CONFIG\) FORCE\n\t\$\(call if_changed,gzip\)/g' kernel/Makefile
+          
+          # Generate config
           make O=out X00TD_defconfig
           
           # Compile the kernel image and DTB
