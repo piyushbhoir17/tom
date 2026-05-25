@@ -45,9 +45,7 @@ jobs:
           export SUBARCH=arm64
           export CC="ccache clang"
           
-          # Clean workspace and generate config
-          make O=out clean
-          make O=out mrproper
+          # Generate config (bypassing make clean)
           make O=out X00TD_defconfig
           
           # Compile the kernel image and DTB
