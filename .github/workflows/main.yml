@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          lfs: true # Allows downloading large files if you used Git LFS
 
       - name: Install tools
         run: |
@@ -27,7 +29,10 @@ jobs:
       
       - name: Check test13 base zip
         run: |
-          test -f "$BASE_ZIP"
+          if [ ! -f "$BASE_ZIP" ]; then
+            echo "::error::You forgot to upload $BASE_ZIP! Please upload test13.zip to your GitHub repository first."
+            exit 1
+          fi
           unzip -t "$BASE_ZIP"
       
       - name: Extract test13 zip
